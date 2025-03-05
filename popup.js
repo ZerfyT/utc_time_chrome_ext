@@ -1,12 +1,11 @@
 function updateTime() {
-    const now = new Date();
-    const timeString = now.toUTCString().split(' ')[4];
-    const dateString = now.toUTCString().split(' ').slice(0, 4).join(' ');
+    const utcString = (new Date()).toUTCString();
+    const [weekday, day, month, year, timeString] = utcString.split(' ');
 
     document.getElementById('utc-time').textContent = timeString;
-    document.getElementById('utc-date').textContent = dateString;
+    document.getElementById('utc-date').textContent = `${weekday} ${day} ${month} ${year}`;
 }
-
 
 updateTime();
 setInterval(updateTime, 1000);
+
