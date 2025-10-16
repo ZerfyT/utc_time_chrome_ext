@@ -7,19 +7,56 @@
 </head>
 
 <body>
-    <div class="time-container" id="utc-container" title="Click to copy ISO format">
-        <div class="label">UTC</div>
-        <div class="time" id="utc-time">--:--:--</div>
-        <div class="date" id="utc-date">----------</div>
+    <div id="main-display">
+        <div class="time-container main-utc">
+            <div class="label">UTC</div>
+            <div class="time" id="utc-time">--:--:--</div>
+            <div class="date" id="utc-date">----------</div>
+        </div>
+        <div class="time-container">
+            <div class="label">Local</div>
+            <div class="time" id="local-time">--:--:--</div>
+            <div class="date" id="local-date">----------</div>
+        </div>
     </div>
 
-    <div class="time-container">
-        <div class="label">Local</div>
-        <div class="time" id="local-time">--:--:--</div>
-        <div class="date" id="local-date">----------</div>
+    <div class="section-divider"></div>
+
+    <div id="favorite-timezones-list"></div>
+
+    <div class="slider-container">
+        <label for="time-slider">Time Shift (Hours)</label>
+        <input type="range" min="-12" max="12" value="0" class="slider" id="time-slider">
+        <span id="slider-value">0h</span>
     </div>
 
-    <hr>
+    <div class="section-divider"></div>
+
+    <div class="converter-section">
+        <div class="converter">
+            <label>Human Time (UTC)</label>
+            <input type="text" id="human-time-input" placeholder="e.g., 2025-10-14 20:30">
+        </div>
+        <div class="converter">
+            <label>Unix Timestamp (s)</label>
+            <input type="text" id="unix-time-input" placeholder="e.g., 1760415600">
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="countdown-section">
+        <input type="text" id="countdown-title" placeholder="Event Name">
+        <input type="datetime-local" id="countdown-input">
+        <div class="button-group">
+            <button id="start-countdown">Start Countdown</button>
+            <button id="clear-countdown">Clear</button>
+        </div>
+        <div id="countdown-display"></div>
+    </div>
+
+
+    <div class="section-divider"></div>
 
     <div class="copy-section">
         <div class="copy-label">Copy UTC as:</div>
@@ -30,6 +67,8 @@
         </div>
     </div>
 
+    <script src="./lib/moment.js"></script>
+    <script src="./lib/moment-timezone-with-data.js"></script>
     <script src="popup.js"></script>
 </body>
 

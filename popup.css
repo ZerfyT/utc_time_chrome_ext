@@ -1,33 +1,50 @@
+:root {
+    --bg-color: #f4f4f9;
+    --text-color: #333;
+    --label-color: #555;
+    --border-color: #ddd;
+    --input-bg: #fff;
+}
+
+body.dark-mode {
+    --bg-color: #2c2c2e;
+    --text-color: #f2f2f7;
+    --label-color: #98989d;
+    --border-color: #444;
+    --input-bg: #3a3a3c;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    width: 250px;
-    padding: 10px;
-    background-color: #f4f4f9;
-    color: #333;
+    width: 350px;
+    padding: 15px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .time-container {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .label {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
-    color: #555;
+    color: var(--label-color);
     text-transform: uppercase;
 }
 
 .time {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 300;
-    color: #000;
 }
 
 .date {
-    font-size: 11px;
-    color: #666;
+    font-size: 10px;
+    color: var(--label-color);
 }
+
 
 hr {
     border: 0;
@@ -52,8 +69,9 @@ hr {
 }
 
 button {
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid #888;
+    background-color: #555;
+    color: white;
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
@@ -67,4 +85,79 @@ button:hover {
 
 button:active {
     background-color: #ddd;
+}
+
+#main-display {
+    display: flex;
+    justify-content: space-around;
+}
+
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: var(--border-color);
+    margin: 15px 0;
+}
+
+/* --- Favorite Timezones --- */
+#favorite-timezones-list .fav-tz {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    padding: 4px 0;
+}
+
+#favorite-timezones-list .fav-tz-name {
+    color: var(--label-color);
+}
+
+/* --- Slider --- */
+.slider-container {
+    text-align: center;
+}
+
+.slider {
+    width: 80%;
+}
+
+/* --- Converters & Countdown --- */
+input[type="text"],
+input[type="datetime-local"] {
+    width: calc(100% - 10px);
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    margin-top: 4px;
+}
+
+.converter-section,
+.countdown-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.converter label,
+.countdown-section label {
+    font-size: 12px;
+}
+
+
+#countdown-display {
+    text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.countdown-section .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.countdown-section .button-group button {
+    flex-grow: 1;
 }

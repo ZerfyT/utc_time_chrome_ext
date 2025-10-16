@@ -5,19 +5,21 @@
     <title>UTC Viewer Settings</title>
     <style>
         body {
-            font-family: sans-serif;
-            padding: 20px;
-            width: 400px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 10px 20px;
+            width: 500px;
         }
 
         fieldset {
             border: 1px solid #ccc;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         legend {
             font-weight: bold;
+            font-size: 1.1em;
         }
 
         label {
@@ -30,18 +32,89 @@
             border-radius: 4px;
             border: 1px solid #888;
             cursor: pointer;
+            background-color: #f0f0f0;
         }
 
         #status {
             margin-left: 15px;
-            color: green;
+            color: #28a745;
             font-weight: bold;
+        }
+
+        #timezone-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #timezone-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .remove-tz {
+            color: #dc3545;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Simple toggle switch CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
         }
     </style>
 </head>
 
 <body>
-    <h1>Time Format Settings</h1>
+    <h1>Settings</h1>
     <fieldset>
         <legend>Choose your preferred time format:</legend>
         <label>
@@ -57,10 +130,29 @@
             <input type="radio" name="format" value="12h"> 12-Hour without Seconds (e.g., 02:35 PM)
         </label>
     </fieldset>
-    <br>
-    <button id="save">Save</button>
+    <fieldset>
+        <legend>Appearance</legend>
+        <div class="theme-switcher">
+            <label for="theme-toggle">Dark Mode</label>
+            <label class="switch" style="margin-left: 15px;">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Favorite Timezones</legend>
+        <p>Add IANA timezone names (e.g., America/New_York, Europe/London, Asia/Tokyo).</p>
+        <input type="text" id="tz-input" placeholder="Enter timezone...">
+        <button id="add-tz">Add</button>
+        <ul id="timezone-list"></ul>
+    </fieldset>
+
+    <button id="save">Save Settings</button>
     <span id="status"></span>
 
+    <script src="lib/moment-timezone-with-data.min.js"></script>
     <script src="options.js"></script>
 </body>
 
