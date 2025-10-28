@@ -143,16 +143,21 @@
 
     <fieldset>
         <legend>Favorite Timezones</legend>
-        <p>Add IANA timezone names (e.g., America/New_York, Europe/London, Asia/Tokyo).</p>
-        <input type="text" id="tz-input" placeholder="Enter timezone...">
-        <button id="add-tz">Add</button>
+        <p>Select a timezone from the list and click "Add".</p>
+        <div>
+            <select id="tz-select">
+                <option value="">Loading timezones...</option>
+            </select>
+            <button id="add-tz">Add</button>
+        </div>
         <ul id="timezone-list"></ul>
     </fieldset>
 
     <button id="save">Save Settings</button>
     <span id="status"></span>
 
-    <script src="lib/moment-timezone-with-data.min.js"></script>
+    <script src="./lib/moment.js"></script>
+    <script src="./lib/moment-timezone-with-data.js"></script>
     <script src="options.js"></script>
 </body>
 

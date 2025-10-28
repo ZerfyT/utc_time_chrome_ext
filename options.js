@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusEl = document.getElementById('status');
     const themeToggle = document.getElementById('theme-toggle');
     const addTzBtn = document.getElementById('add-tz');
-    const tzInput = document.getElementById('tz-input');
     const tzList = document.getElementById('timezone-list');
+
+    const tzSelectEl = document.getElementById('tz-select');
 
     let favoriteTimezones = [];
 
@@ -24,14 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function populateTimezoneSelect() {
+        const allTimezones = moment.tz.names();
+        tzSelectEl.innerHTML = ''; // Clear "Loading..."
+        allTimezones.forEach(tz => {
+            const option = document.createElement('option');
+            option.value = tz;
+            option.textContent = tz.replace(/_/g, ' '); // Make it readable
+            tzSelectEl.appendChild(option);
+        });
+    }
+
     addTzBtn.addEventListener('click', () => {
-        const newTz = tzInput.value.trim();
-        if (newTz && moment.tz.names().includes(newTz) && !favoriteTimezones.includes(newTz)) {
+        const newTz = tzSelectEl.value;
+
+        if (newTz && !favoriteTimezones.includes(newTz)) {
             favoriteTimezones.push(newTz);
             renderTimezones();
-            tzInput.value = '';
         } else {
-            alert('Invalid or duplicate timezone!');
+            alert('Timezone is already in your favorites!');
         }
     });
 
@@ -64,5 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveBtn.addEventListener('click', saveOptions);
+    populateTimezoneSelect();
     restoreOptions();
 });

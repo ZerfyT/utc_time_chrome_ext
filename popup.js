@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const localTimeEl = document.getElementById('local-time');
     const localDateEl = document.getElementById('local-date');
     const favTzListEl = document.getElementById('favorite-timezones-list');
+    const mainLabelEl = document.getElementById('main-display-label');
+    const mainTimezoneSelectEl = document.getElementById('main-timezone-select'); // Get main select
+
 
     const copyIsoBtn = document.getElementById('copy-iso');
     const copyReadableBtn = document.getElementById('copy-readable');
@@ -51,15 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const dateFormat = 'ddd, D MMM YYYY';
 
-        utcTimeEl.textContent = now.clone().utc().format(momentTimeFormat);
-        utcDateEl.textContent = now.clone().utc().format(dateFormat);
+        let mainMoment;
+        if (mainDisplayTimezone === 'UTC') {
+            mainMoment = now.clone().utc();
+            mainLabelEl.textContent = 'UTC';
+        } else if (mainDisplayTimezone === 'Local') {
+            mainMoment = now.clone();
+            mainLabelEl.textContent = 'Local';
+        } else {
+            mainMoment = now.clone().tz(mainDisplayTimezone);
+            mainLabelEl.textContent = mainDisplayTimezone.split('/').pop().replace(/_/g, ' ');
+        }
+
+        utcTimeEl.textContent = mainMoment.format(momentTimeFormat);
+        utcDateEl.textContent = mainMoment.format(dateFormat);
         localTimeEl.textContent = now.format(momentTimeFormat);
         localDateEl.textContent = now.format(dateFormat);
 
         favTzListEl.innerHTML = '';
         favoriteTimezones.forEach(tz => {
             const tzTime = now.clone().tz(tz).format(`${momentTimeFormat} (z)`);
-            const tzName = tz.split('/').pop().replace('_', ' ');
+            const tzName = tz.split('/').pop().replace(/_/g, ' ');
             const html = `
                 <div class="fav-tz">
                     <span class="fav-tz-name">${tzName}</span>
@@ -78,11 +93,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Populate the main timezone selector ---
+    function populateMainTimezoneSelect() {
+        mainTimezoneSelectEl.innerHTML = '';
+
+        mainTimezoneSelectEl.appendChild(new Option('UTC', 'UTC'));
+        mainTimezoneSelectEl.appendChild(new Option('Local', 'Local'));
+
+        const favGroup = document.createElement('optgroup');
+        favGroup.label = 'Favorites';
+        favoriteTimezones.forEach(tz => {
+            if (tz !== 'UTC' && tz !== 'Local') {
+                favGroup.appendChild(new Option(tz.replace(/_/g, ' '), tz));
+            }
+        });
+        mainTimezoneSelectEl.appendChild(favGroup);
+
+        const allGroup = document.createElement('optgroup');
+        allGroup.label = 'All Timezones';
+        const allTimezones = moment.tz.names();
+
+        allTimezones.forEach(tz => {
+            if (!favoriteTimezones.includes(tz) && tz !== 'UTC' && tz !== 'Local') {
+                allGroup.appendChild(new Option(tz.replace(/_/g, ' '), tz));
+            }
+        });
+
+        mainTimezoneSelectEl.appendChild(allGroup);
+        mainTimezoneSelectEl.value = mainDisplayTimezone;
+    }
+
     // --- Load Settings From Storage ---
     chrome.storage.sync.get(['theme', 'timezones', 'timeFormat'], (items) => {
         loadTheme(items.theme || 'light');
         favoriteTimezones = items.timezones || ['America/New_York', 'Europe/London', 'Asia/Tokyo'];
         timeFormatSetting = items.timeFormat || '24h-seconds';
+        mainDisplayTimezone = items.mainDisplayTimezone || 'UTC';
+
+        populateMainTimezoneSelect();
 
         updateAllTimes();
         intervalID = setInterval(updateAllTimes, 1000);
@@ -131,6 +179,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (intervalID) clearInterval(intervalID);
             intervalID = setInterval(updateAllTimes, 1000);
         }
+        updateAllTimes();
+    });
+
+    // --- MAIN TIMEZONE SELECT ---
+    mainTimezoneSelectEl.addEventListener('input', (e) => {
+        mainDisplayTimezone = e.target.value;
+        chrome.storage.sync.set({ mainDisplayTimezone: mainDisplayTimezone });
         updateAllTimes();
     });
 
